@@ -3,6 +3,12 @@ using UnityEngine;
 public class Expansion : MonoBehaviour
 {
     [SerializeField] private float _growthRate;
+    private Vector3 _maxSize;
+
+    private Expansion()
+    {
+        _maxSize = new Vector3(3, 3, 3);
+    }
 
     private void Update()
     {
@@ -11,7 +17,7 @@ public class Expansion : MonoBehaviour
 
     private void Run(float rate)
     {
-        Vector3 maxSize = new Vector3(3, 3, 3);
-        transform.localScale = Vector3.Lerp(transform.localScale, maxSize, rate * Time.deltaTime);
+        
+        transform.localScale = Vector3.Lerp(transform.localScale, _maxSize, rate * Time.deltaTime);
     }
 }
