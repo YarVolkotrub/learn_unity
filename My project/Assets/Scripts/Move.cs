@@ -1,13 +1,13 @@
 using UnityEngine;
 
-public class Sphere : MonoBehaviour
+public class Move : MonoBehaviour
 {
     private void Update()
     {
-        Move();
+        Run();
     }
 
-    private void Move()
+    private void Run()
     {
         transform.Translate(transform.forward * Time.deltaTime);
     }
