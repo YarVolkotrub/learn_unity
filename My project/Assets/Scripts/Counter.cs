@@ -26,7 +26,6 @@ public class Counter : MonoBehaviour
             {
                 _isRunning = false;
                 StartCoroutine(_coroutine);
-                NumberChanged?.Invoke();
             }
             else
             {
@@ -43,6 +42,7 @@ public class Counter : MonoBehaviour
         while (true)
         {
             DisplayedNumber += step;
+            NumberChanged?.Invoke();
 
             yield return coroutuneDelay;
         }
