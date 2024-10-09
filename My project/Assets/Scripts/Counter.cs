@@ -1,36 +1,32 @@
 using System.Collections;
-using TMPro;
 using UnityEngine;
+using System;
 
 public class Counter : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI _text;
-
     private float _delay = 0.5f;
     private int _step = 1;
-    private int _displayedNumber = 0;
     private bool _isRunning = true;
     private IEnumerator _coroutine;
+    private KeyCode _isClickMouse = KeyCode.Mouse0;
 
-    void Start()
+    public event Action NumberChanged;
+    public int DisplayedNumber { get; private set; }
+
+    private void Start()
     {
-        _text.text = string.Empty;
         _coroutine = Count(_step, _delay);
     }
 
     private void Update()
     {
-        StartStopCoroutune();
-    }
-
-    private void StartStopCoroutune()
-    {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(_isClickMouse))
         {
             if (_isRunning)
             {
                 _isRunning = false;
                 StartCoroutine(_coroutine);
+                NumberChanged?.Invoke();
             }
             else
             {
@@ -42,17 +38,13 @@ public class Counter : MonoBehaviour
 
     private IEnumerator Count(int step, float delay)
     {
+        WaitForSeconds coroutuneDelay = new WaitForSeconds(delay);
+
         while (true)
         {
-            Debug.Log($"{_displayedNumber} --- {Time.deltaTime}");
-            DisplayCount(_displayedNumber += step);
+            DisplayedNumber += step;
 
-            yield return new WaitForSeconds(delay);
+            yield return coroutuneDelay;
         }
-    }
-
-    private void DisplayCount(float count)
-    {
-        _text.text = count.ToString();
     }
 }
