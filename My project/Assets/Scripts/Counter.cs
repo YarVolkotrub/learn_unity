@@ -39,7 +39,7 @@ public class Counter : MonoBehaviour
     {
         WaitForSeconds coroutuneDelay = new WaitForSeconds(delay);
 
-        while (true)
+        while (_isRunning == false)
         {
             DisplayedNumber += step;
             NumberChanged?.Invoke();
