@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,16 +21,16 @@ public class Spawner : MonoBehaviour
         }
         
         Destroy(gameObject);
-        
     }
 
     private bool CalculateChance()
     {
         float chance = UnityEngine.Random.value;
+        float chanceSeparation = gameObject.GetComponent<Cube>().ChanceSeparation;
 
-        if (chance <= _chanceSeparation)
+        if (chance <= chanceSeparation)
         {
-            _chanceSeparation /= _dividerChanceSeparation;
+            gameObject.GetComponent<Cube>().ChanceSeparation /= _dividerChanceSeparation;
             
             return true;
         }

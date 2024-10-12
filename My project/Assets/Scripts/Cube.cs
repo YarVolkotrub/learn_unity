@@ -4,6 +4,7 @@ public class Cube : MonoBehaviour
 {
     private Rigidbody _rigidbody;
     private Renderer _renderer;
+    public float ChanceSeparation = 1;
 
     private void Awake()
     {
