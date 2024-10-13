@@ -9,25 +9,22 @@ public class Spawner : MonoBehaviour
     private int _minCountCubes = 2;
     private int _maxCountCubes = 6;
     private float _dividerScale = 2;
-    private List<Cube> _cubes = new();
 
     public event Action CubesSpawned;
 
-    public List<Cube> Cubes => _cubes.ToList();
-
     private void OnEnable()
     {
-        _cube.ClickMouse += Run;
+        _cube.MouseClicked += Spawn;
     }
 
     private void OnDisable()
     {
-        _cube.ClickMouse -= Run;
+        _cube.MouseClicked -= Spawn;
     }
 
-    private void Run()
+    private void Spawn()
     {
-        if (_cube.CanBeSeparated)
+        if (_cube.CanSeparated)
         {
             CreateCubes();
             CubesSpawned?.Invoke();
@@ -43,7 +40,7 @@ public class Spawner : MonoBehaviour
 
         for (int i = 0; i < countCube; i++)
         {
-            _cubes.Add(Instantiate(_cube));
+            Instantiate(_cube);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Explosion : MonoBehaviour
@@ -16,11 +17,28 @@ public class Explosion : MonoBehaviour
         _spawner.CubesSpawned -= Explode;
     }
 
+    private List<Rigidbody> GetExplodableObjects()
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, _explosionRadius);
+
+        List<Rigidbody> cubs = new();
+
+        foreach (Collider hit in hits)
+        { 
+            if (hit.attachedRigidbody != null)
+            {
+                cubs.Add(hit.attachedRigidbody);
+            }
+        }
+
+        return cubs;
+    }
+
     private void Explode()
     {
-        foreach (Cube obj in _spawner.Cubes)
+        foreach (Rigidbody explodableObject in GetExplodableObjects())
         {
-            obj.Collider.attachedRigidbody.AddExplosionForce(_explosionForce, transform.position, _explosionRadius);
+            explodableObject.AddExplosionForce(_explosionForce, transform.position, _explosionRadius);
         }
     }
 }

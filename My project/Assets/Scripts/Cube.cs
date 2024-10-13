@@ -6,9 +6,9 @@ public class Cube : MonoBehaviour
     [SerializeField] private float _chanceSeparation;
     private float _dividerChanceSeparation = 2;
 
-    public event Action ClickMouse;
+    public event Action MouseClicked;
 
-    public bool CanBeSeparated { get; private set; }
+    public bool CanSeparated { get; private set; }
     public Collider Collider { get; }
 
     private void OnEnable()
@@ -18,8 +18,8 @@ public class Cube : MonoBehaviour
 
     private void OnMouseUpAsButton()
     {
-        CanBeSeparated = IsChanceSeparation();
-        ClickMouse?.Invoke();
+        CanSeparated = IsChanceSeparation();
+        MouseClicked?.Invoke();
     }
 
     private bool IsChanceSeparation()
