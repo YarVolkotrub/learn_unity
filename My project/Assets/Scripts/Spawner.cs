@@ -1,60 +1,47 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    private int _minCountCube = 2;
-    private int _maxCountCube = 6;
-    private float _chanceSeparation = 1;
-    private float _dividerChanceSeparation = 2;
+    [SerializeField] private Cube _cube;
+    private int _minCountCubes = 2;
+    private int _maxCountCubes = 6;
     private float _dividerScale = 2;
-    private float _explosionForce = 500;
-    private float _explosionRadius = 5;
-    private List<Rigidbody> _colliders = new List<Rigidbody>();
+    private List<Cube> _cubes = new();
+    public event Action NewCubes;
 
-    private void OnMouseUpAsButton()
+    public List<Cube> Cubes => _cubes.ToList();
+
+    public void OnEnable()
     {
-        if (CalculateChance())
+        _cube.ClickMouse += Run;
+    }
+
+    public void OnDisable()
+    {
+        _cube.ClickMouse -= Run;
+    }
+    private void Run()
+    {
+        if (_cube.IsSeparation)
         {
-            CreateObjects();
-            Explode();
+            CreateCubes();
+            NewCubes?.Invoke();
         }
-        
+
         Destroy(gameObject);
     }
 
-    private bool CalculateChance()
+    private void CreateCubes()
     {
-        float chance = UnityEngine.Random.value;
-        float chanceSeparation = gameObject.GetComponent<Cube>().ChanceSeparation;
-
-        if (chance <= chanceSeparation)
-        {
-            gameObject.GetComponent<Cube>().ChanceSeparation /= _dividerChanceSeparation;
-            
-            return true;
-        }
-
-        return false;
-    }
-
-    private void CreateObjects()
-    {
-        int countCube = UnityEngine.Random.Range(_minCountCube, _maxCountCube + 1);
+        int countCube = UnityEngine.Random.Range(_minCountCubes, _maxCountCubes + 1);
         transform.localScale /= _dividerScale;
 
         for (int i = 0; i < countCube; i++)
         {
-            GameObject a = Instantiate(gameObject);
-            _colliders.Add(a.GetComponent<Collider>().attachedRigidbody);
-        }
-    }
-
-    private void Explode()
-    {
-        foreach (Rigidbody collider in _colliders)
-        {
-            collider.AddExplosionForce(_explosionForce, transform.position, _explosionRadius);
+            _cubes.Add(Instantiate(_cube));
         }
     }
 }
