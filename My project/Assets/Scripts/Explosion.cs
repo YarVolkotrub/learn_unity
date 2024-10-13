@@ -20,7 +20,7 @@ public class Explosion : MonoBehaviour
     {
         foreach (Cube obj in _spawner.Cubes)
         {
-            obj.GetComponent<Collider>().attachedRigidbody.AddExplosionForce(_explosionForce, transform.position, _explosionRadius);
+            obj.Collider.attachedRigidbody.AddExplosionForce(_explosionForce, transform.position, _explosionRadius);
         }
     }
 }

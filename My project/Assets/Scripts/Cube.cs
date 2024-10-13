@@ -9,6 +9,7 @@ public class Cube : MonoBehaviour
     public event Action ClickMouse;
 
     public bool CanBeSeparated { get; private set; }
+    public Collider Collider { get; }
 
     private void OnEnable()
     {
