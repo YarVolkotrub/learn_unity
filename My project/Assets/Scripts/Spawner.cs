@@ -10,7 +10,8 @@ public class Spawner : MonoBehaviour
     private int _maxCountCubes = 6;
     private float _dividerScale = 2;
     private List<Cube> _cubes = new();
-    public event Action NewCubes;
+
+    public event Action CubesSpawned;
 
     public List<Cube> Cubes => _cubes.ToList();
 
@@ -23,12 +24,13 @@ public class Spawner : MonoBehaviour
     {
         _cube.ClickMouse -= Run;
     }
+
     private void Run()
     {
-        if (_cube.IsSeparation)
+        if (_cube.CanBeSeparated)
         {
             CreateCubes();
-            NewCubes?.Invoke();
+            CubesSpawned?.Invoke();
         }
 
         Destroy(gameObject);

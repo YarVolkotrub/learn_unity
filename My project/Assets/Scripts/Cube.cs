@@ -4,14 +4,24 @@ using UnityEngine;
 public class Cube : MonoBehaviour
 {
     [SerializeField] private float _chanceSeparation;
-    private Rigidbody _rigidbody;
-    private Renderer _renderer;
     private float _dividerChanceSeparation = 2;
+
     public event Action ClickMouse;
 
-    public bool IsSeparation { get; private set; }
+    public bool CanBeSeparated { get; private set; }
 
-    private bool CalculateChanceSeparation()
+    private void OnEnable()
+    {
+        GetComponent<Renderer>().material.color = UnityEngine.Random.ColorHSV();
+    }
+
+    private void OnMouseUpAsButton()
+    {
+        CanBeSeparated = IsChanceSeparation();
+        ClickMouse?.Invoke();
+    }
+
+    private bool IsChanceSeparation()
     {
         float chance = UnityEngine.Random.value;
 
@@ -23,28 +33,5 @@ public class Cube : MonoBehaviour
         }
 
         return false;
-    }
-
-    private void Awake()
-    {
-        if (GetComponent<Rigidbody>() == null)
-        {
-            gameObject.AddComponent(typeof(Rigidbody));
-        }
-
-        _rigidbody = GetComponent<Rigidbody>();
-        _renderer = GetComponent<Renderer>();
-    }
-
-    private void OnEnable()
-    {
-        _rigidbody.useGravity = true;
-        _renderer.material.color = UnityEngine.Random.ColorHSV();
-    }
-
-    private void OnMouseUpAsButton()
-    {
-        IsSeparation = CalculateChanceSeparation();
-        ClickMouse?.Invoke();
     }
 }

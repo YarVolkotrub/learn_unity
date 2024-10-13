@@ -8,12 +8,12 @@ public class Explosion : MonoBehaviour
     
     private void OnEnable()
     {
-        _spawner.NewCubes += Explode;
+        _spawner.CubesSpawned += Explode;
     }
 
     private void OnDisable()
     {
-        _spawner.NewCubes -= Explode;
+        _spawner.CubesSpawned -= Explode;
     }
 
     private void Explode()
