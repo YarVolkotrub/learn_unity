@@ -15,12 +15,12 @@ public class Spawner : MonoBehaviour
 
     public List<Cube> Cubes => _cubes.ToList();
 
-    public void OnEnable()
+    private void OnEnable()
     {
         _cube.ClickMouse += Run;
     }
 
-    public void OnDisable()
+    private void OnDisable()
     {
         _cube.ClickMouse -= Run;
     }
