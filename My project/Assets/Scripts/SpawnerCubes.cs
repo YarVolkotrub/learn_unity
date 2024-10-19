@@ -50,7 +50,7 @@ public class SpawnerCubes : MonoBehaviour
 
     private void GetCube() => _pool.Get();
 
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter (Collider other)
     {
         _pool.Release(other.gameObject.GetComponent<Cube>());
     }
