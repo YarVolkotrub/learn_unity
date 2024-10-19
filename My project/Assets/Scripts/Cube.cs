@@ -1,38 +1,35 @@
-using System;
 using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
-    [SerializeField] private float _chanceSeparation;
-    private float _dividerChanceSeparation = 2;
+    [SerializeField] private Material _material;
+    [SerializeField] private Mesh _mesh;
 
-    public event Action MouseClicked;
+    private GameObject _cube;
+    private string _objectName = "Cube";
 
-    public bool CanSeparated { get; private set; }
-    public Collider Collider { get; }
-
-    private void OnEnable()
+    private void Awake()
     {
+        Create();
+    }
+
+    private void Create()
+    {
+        _cube = new GameObject(_objectName);
+        Customization();
+    }
+
+    private void Customization()
+    {
+        _cube.AddComponent<MeshRenderer>();
+        _cube.AddComponent<BoxCollider>();
+        MeshFilter meshFilter = _cube.AddComponent<MeshFilter>();
+        Rigidbody rigidbody = _cube.AddComponent<Rigidbody>();
+
+        GetComponent<Renderer>().material = _material;
+        rigidbody.useGravity = true;
+        //renderer.material = _material;
         GetComponent<Renderer>().material.color = UnityEngine.Random.ColorHSV();
-    }
-
-    private void OnMouseUpAsButton()
-    {
-        CanSeparated = IsChanceSeparation();
-        MouseClicked?.Invoke();
-    }
-
-    private bool IsChanceSeparation()
-    {
-        float chance = UnityEngine.Random.value;
-
-        if (chance <= _chanceSeparation)
-        {
-            _chanceSeparation /= _dividerChanceSeparation;
-
-            return true;
-        }
-
-        return false;
+        meshFilter.mesh = _mesh;
     }
 }
