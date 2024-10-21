@@ -2,34 +2,46 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
-    [SerializeField] private Material _material;
-    [SerializeField] private Mesh _mesh;
+    private Material _material;
+    private Color _defaultColor;
+    private bool _isColorChange = false;
+    private int _maxLifetime = 5;
+    private int _minLifetime = 2;
+    private int _lifetime;
 
-    private GameObject _cube;
-    private string _objectName = "Cube";
 
     private void Awake()
     {
-        Create();
+        gameObject.AddComponent<BoxCollider>();
+        gameObject.AddComponent<MeshRenderer>();
+        _material = GetComponent<Renderer>().material;
+        _defaultColor = _material.color;
     }
 
-    private void Create()
+    public bool IsColorChange()
     {
-        _cube = new GameObject(_objectName);
-        Customization();
+        return _isColorChange;
     }
 
-    private void Customization()
+    public void ChangeColor()
     {
-        _cube.AddComponent<MeshRenderer>();
-        _cube.AddComponent<BoxCollider>();
-        MeshFilter meshFilter = _cube.AddComponent<MeshFilter>();
-        Rigidbody rigidbody = _cube.AddComponent<Rigidbody>();
+        _material.color = UnityEngine.Random.ColorHSV();
+        _isColorChange = true;
+    }
 
-        GetComponent<Renderer>().material = _material;
-        rigidbody.useGravity = true;
-        //renderer.material = _material;
-        GetComponent<Renderer>().material.color = UnityEngine.Random.ColorHSV();
-        meshFilter.mesh = _mesh;
+    public void SetDefaultColor()
+    {
+        _material.color = _defaultColor;
+        _isColorChange = false;
+    }
+
+    public int GetLifetime()
+    {
+        return Random.Range(_minLifetime, _maxLifetime);
+    }
+
+    public void DisableTrigger()
+    {
+        GetComponent<BoxCollider>().isTrigger = false;
     }
 }
