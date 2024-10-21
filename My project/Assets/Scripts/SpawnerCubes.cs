@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -69,7 +70,8 @@ public class SpawnerCubes : MonoBehaviour
             cube.ChangeColor();
         }
 
-        StartCoroutine(CountdownLife(lifetime, cube));
+        //StartCoroutine(CountdownLife(lifetime, cube));
+        _pool.Release(cube);
     }
 
     private IEnumerator CountdownLife(int lifetime, Cube cube)

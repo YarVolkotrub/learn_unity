@@ -13,7 +13,9 @@ public class Cube : MonoBehaviour
     private void Awake()
     {
         _collider = gameObject.AddComponent<BoxCollider>();
+        gameObject.AddComponent<Rigidbody>();
         gameObject.AddComponent<MeshRenderer>();
+        //MeshFilter filter = gameObject.AddComponent<MeshFilter>();
         _material = GetComponent<Renderer>().material;
         _defaultColor = _material.color;
     }
