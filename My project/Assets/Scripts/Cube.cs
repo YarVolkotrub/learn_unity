@@ -2,17 +2,17 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
-    private Material _material;
-    private Color _defaultColor;
     private bool _isColorChange = false;
     private int _maxLifetime = 5;
     private int _minLifetime = 2;
     private int _lifetime;
-
+    private Material _material;
+    private Color _defaultColor;
+    private BoxCollider _collider;
 
     private void Awake()
     {
-        gameObject.AddComponent<BoxCollider>();
+        _collider = gameObject.AddComponent<BoxCollider>();
         gameObject.AddComponent<MeshRenderer>();
         _material = GetComponent<Renderer>().material;
         _defaultColor = _material.color;
@@ -40,8 +40,13 @@ public class Cube : MonoBehaviour
         return Random.Range(_minLifetime, _maxLifetime);
     }
 
+    public void EnableTrigger()
+    {
+        _collider.isTrigger = true;
+    }
+
     public void DisableTrigger()
     {
-        GetComponent<BoxCollider>().isTrigger = false;
+        _collider.isTrigger = false;
     }
 }

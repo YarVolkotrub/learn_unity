@@ -39,7 +39,7 @@ public class SpawnerCubes : MonoBehaviour
     {
         cube.transform.position = GetRandomStartPosition();
         cube.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        cube.GetComponent<BoxCollider>().isTrigger = true;
+        cube.EnableTrigger();
         cube.SetDefaultColor();
         cube.gameObject.SetActive(true);
     }
