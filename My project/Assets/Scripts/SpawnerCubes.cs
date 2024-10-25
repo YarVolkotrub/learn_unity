@@ -1,5 +1,3 @@
-using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -16,7 +14,6 @@ public class SpawnerCubes : MonoBehaviour
     private int _poolMaxSize = 5;
     private float _hightSpawn = 9f;
     private float _repeatRate = 1f;
-    private Coroutine _coroutine;
 
     private void Awake()
     {
@@ -38,10 +35,8 @@ public class SpawnerCubes : MonoBehaviour
 
     private void ActionOnGet(Cube cube)
     {
-        cube.transform.position = GetRandomStartPosition();
-        cube.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        cube.EnableTrigger();
-        cube.SetDefaultColor();
+        cube.CollisionEnter += CubeRelease;
+        cube.Init(GetRandomStartPosition());
         cube.gameObject.SetActive(true);
     }
 
@@ -58,26 +53,10 @@ public class SpawnerCubes : MonoBehaviour
     {
         _pool.Get();
     }
-       
-    private void OnCollisionEnter(Collision collision)
+
+    private void CubeRelease(Cube cube)
     {
-        Cube cube = collision.gameObject.GetComponent<Cube>();
-        cube.DisableTrigger();
-        int lifetime = cube.GetLifetime();
-
-        if (cube.IsColorChange() == false)
-        {
-            cube.ChangeColor();
-        }
-
-        //StartCoroutine(CountdownLife(lifetime, cube));
-        _pool.Release(cube);
-    }
-
-    private IEnumerator CountdownLife(int lifetime, Cube cube)
-    {
-        yield return new WaitForSeconds(lifetime);
-
+        cube.CollisionEnter -= CubeRelease;
         _pool.Release(cube);
     }
 }

@@ -1,54 +1,68 @@
 using UnityEngine;
+using System.Collections;
+using System;
+
+[RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(Renderer))]
 
 public class Cube : MonoBehaviour
 {
-    private bool _isColorChange = false;
     private int _maxLifetime = 5;
     private int _minLifetime = 2;
-    private int _lifetime;
     private Material _material;
     private Color _defaultColor;
-    private BoxCollider _collider;
+    private Platform _collisionObject;
+    private bool _isPlatformTouched;
+
+    public event Action<Cube> CollisionEnter;
 
     private void Awake()
     {
-        _collider = gameObject.AddComponent<BoxCollider>();
-        gameObject.AddComponent<Rigidbody>();
-        gameObject.AddComponent<MeshRenderer>();
-        //MeshFilter filter = gameObject.AddComponent<MeshFilter>();
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
         _material = GetComponent<Renderer>().material;
         _defaultColor = _material.color;
     }
 
-    public bool IsColorChange()
+    public void Init(Vector3 startPosition)
     {
-        return _isColorChange;
+        ResetColor();
+        _isPlatformTouched = false;
+        transform.position = startPosition;
+        gameObject.SetActive(true);
     }
-
-    public void ChangeColor()
-    {
-        _material.color = UnityEngine.Random.ColorHSV();
-        _isColorChange = true;
-    }
-
-    public void SetDefaultColor()
+    private void ResetColor()
     {
         _material.color = _defaultColor;
-        _isColorChange = false;
     }
 
-    public int GetLifetime()
+    private int GetLifetime()
     {
-        return Random.Range(_minLifetime, _maxLifetime);
+        return UnityEngine.Random.Range(_minLifetime, _maxLifetime);
     }
 
-    public void EnableTrigger()
+    private Color GetNewColor()
     {
-        _collider.isTrigger = true;
+        return UnityEngine.Random.ColorHSV();
     }
 
-    public void DisableTrigger()
+    private void OnCollisionEnter(Collision collision)
     {
-        _collider.isTrigger = false;
+        if (_isPlatformTouched) return;
+
+        if (collision.gameObject.TryGetComponent(out _collisionObject) == false) return;
+
+        _isPlatformTouched = true;
+        int lifetime = GetLifetime();
+        _material.color = GetNewColor();
+
+        StartCoroutine(CountdownLife(lifetime));
+    }
+
+    private IEnumerator CountdownLife(int lifetime)
+    {
+        yield return new WaitForSeconds(lifetime);
+
+        CollisionEnter?.Invoke(this);
     }
 }
