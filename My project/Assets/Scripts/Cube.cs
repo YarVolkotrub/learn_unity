@@ -24,6 +24,21 @@ public class Cube : MonoBehaviour
         _defaultColor = _material.color;
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (_isPlatformTouched)
+            return;
+
+        if (collision.gameObject.TryGetComponent(out _collisionObject) == false)
+            return;
+
+        _isPlatformTouched = true;
+        int lifetime = GetLifetime();
+        _material.color = GetNewColor();
+
+        StartCoroutine(CountdownLife(lifetime));
+    }
+
     public void Init(Vector3 startPosition)
     {
         ResetColor();
@@ -44,19 +59,6 @@ public class Cube : MonoBehaviour
     private Color GetNewColor()
     {
         return UnityEngine.Random.ColorHSV();
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (_isPlatformTouched) return;
-
-        if (collision.gameObject.TryGetComponent(out _collisionObject) == false) return;
-
-        _isPlatformTouched = true;
-        int lifetime = GetLifetime();
-        _material.color = GetNewColor();
-
-        StartCoroutine(CountdownLife(lifetime));
     }
 
     private IEnumerator CountdownLife(int lifetime)

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -30,7 +31,17 @@ public class SpawnerCubes : MonoBehaviour
 
     private void Start()
     {
-        InvokeRepeating(nameof(GetCube), 0.0f, _repeatRate);
+        StartCoroutine(Spawn());
+    }
+
+    private IEnumerator Spawn()
+    {
+        WaitForSeconds wait = new(_repeatRate);
+        while (true)
+        {
+            _pool.Get();
+            yield return wait;
+        }
     }
 
     private void ActionOnGet(Cube cube)
@@ -47,11 +58,6 @@ public class SpawnerCubes : MonoBehaviour
             _hightSpawn,
             Random.Range(_minPositionZ, _maxPositionZ)
             );
-    }
-
-    private void GetCube()
-    {
-        _pool.Get();
     }
 
     private void CubeRelease(Cube cube)
